@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public final class Chapter4Steps {
-
     private Chapter4Steps() {
         // Not called
     }

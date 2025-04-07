@@ -25,5 +25,5 @@ dependencies {
 test {
     useJUnitPlatform()
     systemProperties(System.getProperties())
-    systemProperty "local", System.getProperty("local", "true")
+//    systemProperty "local", System.getProperty("local", "true")
 }

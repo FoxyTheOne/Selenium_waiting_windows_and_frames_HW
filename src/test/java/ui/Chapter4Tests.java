@@ -1,5 +1,7 @@
 package ui;
 
+import config.TestPropertiesConfig;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -25,8 +27,11 @@ import static ui.Constants.*;
 class Chapter4Tests {
     //    private static final String BASE_URL = "https://bonigarcia.dev/selenium-webdriver-java/";
     private static final Logger LOGGER = LoggerFactory.getLogger(Chapter4Tests.class);
+    TestPropertiesConfig config = ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
+    private final String baseUrl = config.getBaseUrl();
+
     private WebDriver driver;
-    private Actions actions;
+    //    private Actions actions;
     private JavascriptExecutor js;
     private WebDriverWait wait5sec;
     private IWebStorageSteps localWebStorageSteps;
@@ -34,12 +39,15 @@ class Chapter4Tests {
 
     @BeforeAll
     void setUpAll() {
-        if (System.getProperty("local").equals("true")) {
+//        if (System.getProperty("local").equals("true")) {
+//            System.setProperty("webdriver.chrome.driver", "src\\test\\resources\\chromedriver.exe");
+//        }
+        if(!config.isRemote()){
             System.setProperty("webdriver.chrome.driver", "src\\test\\resources\\chromedriver.exe");
         }
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        actions = new Actions(driver);
+//        actions = new Actions(driver);
         js = (JavascriptExecutor) driver;
         wait5sec = new WebDriverWait(driver, Duration.ofSeconds(5));
         localWebStorageSteps = new LocalWebStorageSteps(js);
@@ -54,12 +62,14 @@ class Chapter4Tests {
 
     @BeforeEach
     void setup() {
-        driver.get(BASE_URL);
+        driver.get(baseUrl);
     }
 
     @Test
     void openWebFormPageTest() {
         String actualMainTitle = driver.getTitle();
+
+        assertEquals(baseUrl, driver.getCurrentUrl());
         assertEquals("Hands-On Selenium WebDriver with Java", actualMainTitle);
     }
 
@@ -131,7 +141,7 @@ class Chapter4Tests {
     void iFrameTest() {
         openIFramePage(driver);
         String expectedFirstParagraphText = "Lorem ipsum dolor sit amet consectetur adipiscing elit habitant metus, tincidunt maecenas posuere sollicitudin augue duis bibendum mauris eu, et dignissim magna ad nascetur suspendisse quis nunc. Fames est ligula molestie aliquam pretium bibendum nullam, sociosqu maecenas mus etiam consequat ornare leo, sem mattis varius luctus litora senectus. Parturient quis tristique erat natoque tortor nascetur, primis augue vivamus habitasse senectus porta leo, aenean potenti ante a nam.";
-        String html = driver.getPageSource();
+//        String html = driver.getPageSource();
         WebElement iFrameElement = wait5sec.until(ExpectedConditions.presenceOfElementLocated(By.id("my-iframe")));
 
         driver.switchTo().frame(iFrameElement);
@@ -188,7 +198,7 @@ class Chapter4Tests {
     }
 
     @Test
-    void localWebStorageTest() throws InterruptedException {
+    void localWebStorageTest() {
         openWebStoragePage(driver);
 //        WebStorage webStorage = (WebStorage) driver; <-- deprecated
 //        LocalStorage localStorage = webStorage.getLocalStorage(); <-- deprecated
@@ -219,7 +229,7 @@ class Chapter4Tests {
         LOGGER.info("Local storage with new value: {}", localStorageTextElement.getText());
 
 //        assertEquals("{\"%s\":\"%s\"}".formatted(NEW_KEY, NEW_VALUE), localStorageTextElement.getText());
-        assertEquals(String.format("\"%s\":\"%s\"", NEW_KEY, NEW_VALUE), localStorageTextElement.getText());
+        assertEquals(String.format("{\"%s\":\"%s\"}", NEW_KEY, NEW_VALUE), localStorageTextElement.getText());
     }
 
     @Test
@@ -248,7 +258,7 @@ class Chapter4Tests {
         LOGGER.info("Session storage with new value: {}", sessionStorageTextElement.getText());
 
 //        assertEquals("{\"%s\":\"%s\"}".formatted(NEW_KEY, NEW_VALUE), sessionStorageTextElement.getText());
-        assertEquals(String.format("\"%s\":\"%s\"", NEW_KEY, NEW_VALUE), sessionStorageTextElement.getText());
+        assertEquals(String.format("{\"%s\":\"%s\"}", NEW_KEY, NEW_VALUE), sessionStorageTextElement.getText());
     }
 
     List<WebElement> scrollAndCheckParagraphsAmount(WebElement divWithParagraphs, List<WebElement> availableParagraphs) {

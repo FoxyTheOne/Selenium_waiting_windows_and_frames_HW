@@ -18,4 +18,7 @@ public interface TestPropertiesConfig extends Config {
 
     @Key("password")
     String getPassword();
+
+    @Key("isRemote")
+    Boolean isRemote();
 }

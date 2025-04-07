@@ -1,5 +1,7 @@
 package ui;
 
+import config.TestPropertiesConfig;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,13 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LoadingImagesTests {
-    private static final String BASE_URL = "https://bonigarcia.dev/selenium-webdriver-java/loading-images.html";
+    private static final String BASE_IMAGE_URL = "https://bonigarcia.dev/selenium-webdriver-java/loading-images.html";
+    TestPropertiesConfig config = ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
     private WebDriver driver;
     private WebDriverWait wait10sec;
 
     @BeforeAll
     void setUpAll() {
-        if (System.getProperty("local").equals("true")) {
+        if (!config.isRemote()) {
             System.setProperty("webdriver.chrome.driver", "src\\test\\resources\\chromedriver.exe");
         }
         driver = new ChromeDriver();
@@ -37,7 +40,7 @@ class LoadingImagesTests {
 
     @BeforeEach
     void setup() {
-        driver.get(BASE_URL);
+        driver.get(BASE_IMAGE_URL);
     }
 
     @Test
