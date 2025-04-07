@@ -10,6 +10,7 @@ public class Constants {
         throw new AssertionError("Cannot instantiate ui.Constants class");
     }
 
+    public static final String BASE_URL = "https://bonigarcia.dev/selenium-webdriver-java/";
     public static final String NEW_KEY = "new key";
     public static final String NEW_VALUE = "new value";
 }

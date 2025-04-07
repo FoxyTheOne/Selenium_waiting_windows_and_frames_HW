@@ -18,9 +18,12 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.17'
     // SLF4J - 2 (Logback как реализация)
     implementation 'ch.qos.logback:logback-classic:1.4.12'
+    // Owner for property files
+    testImplementation 'org.aeonbits.owner:owner:1.0.12'
 }
 
 test {
     useJUnitPlatform()
+    systemProperties(System.getProperties())
     systemProperty "local", System.getProperty("local", "true")
 }

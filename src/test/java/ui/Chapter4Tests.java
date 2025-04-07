@@ -18,13 +18,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.Chapter4Steps.*;
-import static ui.Constants.NEW_KEY;
-import static ui.Constants.NEW_VALUE;
+import static ui.Constants.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class Chapter4Tests {
-    private static final String BASE_URL = "https://bonigarcia.dev/selenium-webdriver-java/";
+    //    private static final String BASE_URL = "https://bonigarcia.dev/selenium-webdriver-java/";
     private static final Logger LOGGER = LoggerFactory.getLogger(Chapter4Tests.class);
     private WebDriver driver;
     private Actions actions;
@@ -219,7 +218,8 @@ class Chapter4Tests {
         localStorageButtonElement.click();
         LOGGER.info("Local storage with new value: {}", localStorageTextElement.getText());
 
-        assertEquals("{\"%s\":\"%s\"}".formatted(NEW_KEY, NEW_VALUE), localStorageTextElement.getText());
+//        assertEquals("{\"%s\":\"%s\"}".formatted(NEW_KEY, NEW_VALUE), localStorageTextElement.getText());
+        assertEquals(String.format("\"%s\":\"%s\"", NEW_KEY, NEW_VALUE), localStorageTextElement.getText());
     }
 
     @Test
@@ -247,11 +247,12 @@ class Chapter4Tests {
         sessionStorageButtonElement.click();
         LOGGER.info("Session storage with new value: {}", sessionStorageTextElement.getText());
 
-        assertEquals("{\"%s\":\"%s\"}".formatted(NEW_KEY, NEW_VALUE), sessionStorageTextElement.getText());
+//        assertEquals("{\"%s\":\"%s\"}".formatted(NEW_KEY, NEW_VALUE), sessionStorageTextElement.getText());
+        assertEquals(String.format("\"%s\":\"%s\"", NEW_KEY, NEW_VALUE), sessionStorageTextElement.getText());
     }
 
     List<WebElement> scrollAndCheckParagraphsAmount(WebElement divWithParagraphs, List<WebElement> availableParagraphs) {
-        WebElement lastParagraph = availableParagraphs.getLast();
+        WebElement lastParagraph = availableParagraphs.get(availableParagraphs.size() - 1);
         wait5sec.until(driver -> lastParagraph.isDisplayed());
 //        actions.scrollToElement(lastParagraph).perform(); // <-- исключение "move target out of bounds (Session info: chrome=109.0.5414.120)" . Нужно опуститься до самого низа страницы, а он опускается не до конца. Нужно добавить пиксели (узнать размеры параграфа и опуститься до самого низа) или привязаться к чему-то другому
         js.executeScript("arguments[0].scrollIntoView(true);", lastParagraph);
